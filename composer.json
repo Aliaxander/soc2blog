@@ -25,8 +25,9 @@
     "yiisoft/yii2-swiftmailer": "~2.0.0",
     "yiisoft/yii2-twig": "^2.1",
     "vladkens/vk": "@dev",
-    "vnn/wordpress-rest-api-client": "@dev",
-    "guzzlehttp/guzzle": "^6.2"
+    "wp-api/client": "@dev",
+    "guzzlehttp/guzzle": "^6.2",
+    "justinrainbow/json-schema":"@dev"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

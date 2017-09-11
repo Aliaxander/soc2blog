@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ed77d7c60dadc3225703b74e18a7c2b",
+    "content-hash": "bed6d4da0e9fc989a880ab6ed5657ef5",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -496,6 +496,73 @@
             "time": "2017-03-20T17:10:46+00:00"
         },
         {
+            "name": "justinrainbow/json-schema",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/justinrainbow/json-schema.git",
+                "reference": "9225c967a5395e4643b5124806191c038fb1224b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/9225c967a5395e4643b5124806191c038fb1224b",
+                "reference": "9225c967a5395e4643b5124806191c038fb1224b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.1",
+                "json-schema/json-schema-test-suite": "1.2.0",
+                "phpdocumentor/phpdocumentor": "~2",
+                "phpunit/phpunit": "^4.8.22"
+            },
+            "bin": [
+                "bin/validate-json"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JsonSchema\\": "src/JsonSchema/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Prieto Reis",
+                    "email": "bruno.p.reis@gmail.com"
+                },
+                {
+                    "name": "Justin Rainbow",
+                    "email": "justin.rainbow@gmail.com"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Robert Schönthal",
+                    "email": "seroscho@googlemail.com"
+                }
+            ],
+            "description": "A library to validate a json schema.",
+            "homepage": "https://github.com/justinrainbow/json-schema",
+            "keywords": [
+                "json",
+                "schema"
+            ],
+            "time": "2017-03-23 00:52:32"
+        },
+        {
             "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
@@ -544,6 +611,55 @@
                 "response"
             ],
             "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
+            "name": "rmccue/requests",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rmccue/Requests.git",
+                "reference": "87932f52ffad70504d93f04f15690cf16a089546"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rmccue/Requests/zipball/87932f52ffad70504d93f04f15690cf16a089546",
+                "reference": "87932f52ffad70504d93f04f15690cf16a089546",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "requests/test-server": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Requests": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan McCue",
+                    "homepage": "http://ryanmccue.info"
+                }
+            ],
+            "description": "A HTTP library written in PHP, for human beings.",
+            "homepage": "http://github.com/rmccue/Requests",
+            "keywords": [
+                "curl",
+                "fsockopen",
+                "http",
+                "idna",
+                "ipv6",
+                "iri",
+                "sockets"
+            ],
+            "time": "2016-10-13T00:11:37+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -707,41 +823,30 @@
             "time": "2015-08-02 19:34:58"
         },
         {
-            "name": "vnn/wordpress-rest-api-client",
+            "name": "wp-api/client",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/varsitynewsnetwork/wordpress-rest-api-client.git",
-                "reference": "504fc29ad71f268b321cd87a8de855838f4e8cbe"
+                "url": "https://github.com/WP-API/client-php.git",
+                "reference": "105f2b9e9c161eb090a93dad6b907dc162f05846"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/varsitynewsnetwork/wordpress-rest-api-client/zipball/504fc29ad71f268b321cd87a8de855838f4e8cbe",
-                "reference": "504fc29ad71f268b321cd87a8de855838f4e8cbe",
+                "url": "https://api.github.com/repos/WP-API/client-php/zipball/105f2b9e9c161eb090a93dad6b907dc162f05846",
+                "reference": "105f2b9e9c161eb090a93dad6b907dc162f05846",
                 "shasum": ""
             },
             "require": {
-                "php": ">= 5.6, <= 8.0",
-                "psr/http-message": "^1.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "^6.2",
-                "peridot-php/leo": "^1.5",
-                "peridot-php/peridot": "^1.18",
-                "peridot-php/peridot-prophecy-plugin": "^1.1",
-                "squizlabs/php_codesniffer": "^2.7"
-            },
-            "suggest": {
-                "guzzlehttp/guzzle": "^6.2"
+                "justinrainbow/json-schema": "dev-master",
+                "rmccue/requests": "~1.6"
             },
             "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Vnn\\WpApiClient\\": "src/"
-                }
-            },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-04-06 19:41:40"
+            "license": [
+                "GPL"
+            ],
+            "description": "Client for the WordPress JSON REST API",
+            "time": "2014-05-27 05:52:28"
         },
         {
             "name": "yiisoft/yii2",
@@ -3598,7 +3703,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "vladkens/vk": 20,
-        "vnn/wordpress-rest-api-client": 20
+        "wp-api/client": 20,
+        "justinrainbow/json-schema": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

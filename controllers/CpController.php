@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\models\News;
 use app\models\Vk;
 use app\models\WpClient;
+use GuzzleHttp\Client;
+use Vnn\WpApiClient\Auth\WpBasicAuth;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
 use Yii;
 use yii\filters\AccessControl;
@@ -100,8 +102,33 @@ class CpController extends Controller
     
     public function actionBlog()
     {
-        $client = new \Vnn\WpApiClient\WpClient(new \SoapClient(), 'https://blog.ebot.biz/');
-        $client->setCredentials(new WpBasicAuth('user', 'securepassword'));
+        $testconfig['url'] = 'https://blog.ebot.biz/wp-json';
+        $client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://blog.ebot.biz/',
+            // You can set any number of default request options.
+            'timeout' => 2.0,
+        ]);
+        
+        //        $result = $client->get('wp-json/wp/v2/posts', [
+        //            'headers' => array(
+        //                'Authorization' => 'Basic ' . base64_encode( 'test:fdgrg435efwtg'),
+        //            )
+        //        ]);
+        //        print_r(\GuzzleHttp\json_decode($result->getBody()->getContents()));
+        //
+            $result = $client->post('wp-json/wp/v2/posts', [
+                'auth' => [
+                    'test',
+                    'fdgrg435efwtg'
+                ],
+                'form_data' => [
+                    'text' => '123'
+                ]
+            ]);
+            print_r(\GuzzleHttp\json_decode($result->getBody()->getContents()));
+      
+        
         //https://blog.ebot.biz/oauth1/authorize?oauth_token=BoE50zRj63ua&oauth_token_secret=oGa9LgmQHZg6xKftCXNFWDkJUWP1Jb38f5DDdAx5kyOAIkgI
     }
 }
