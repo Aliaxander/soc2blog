@@ -27,7 +27,8 @@
     "vladkens/vk": "@dev",
     "wp-api/client": "@dev",
     "guzzlehttp/guzzle": "^6.2",
-    "justinrainbow/json-schema":"@dev"
+    "justinrainbow/json-schema":"@dev",
+    "bhaktaraz/php-rss-generator":"@dev"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

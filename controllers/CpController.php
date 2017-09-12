@@ -5,6 +5,9 @@ namespace app\controllers;
 use app\models\News;
 use app\models\Vk;
 use app\models\WpClient;
+use Bhaktaraz\RSSGenerator\Channel;
+use Bhaktaraz\RSSGenerator\Feed;
+use Bhaktaraz\RSSGenerator\Item;
 use GuzzleHttp\Client;
 use Vnn\WpApiClient\Auth\WpBasicAuth;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
@@ -102,33 +105,82 @@ class CpController extends Controller
     
     public function actionBlog()
     {
-        $testconfig['url'] = 'https://blog.ebot.biz/wp-json';
-        $client = new Client([
-            // Base URI is used with relative requests
-            'base_uri' => 'https://blog.ebot.biz/',
-            // You can set any number of default request options.
-            'timeout' => 2.0,
-        ]);
+        $feed = new Feed();
         
-        //        $result = $client->get('wp-json/wp/v2/posts', [
-        //            'headers' => array(
-        //                'Authorization' => 'Basic ' . base64_encode( 'test:fdgrg435efwtg'),
-        //            )
-        //        ]);
-        //        print_r(\GuzzleHttp\json_decode($result->getBody()->getContents()));
-        //
-            $result = $client->post('wp-json/wp/v2/posts', [
-                'auth' => [
-                    'test',
-                    'fdgrg435efwtg'
-                ],
-                'form_data' => [
-                    'text' => '123'
-                ]
-            ]);
-            print_r(\GuzzleHttp\json_decode($result->getBody()->getContents()));
-      
+        $channel = new Channel();
+        $channel
+            ->title("Programming")
+            ->description("Programming with php")
+            ->url('http://bhaktaraz.com.np/?cat=2')
+            ->appendTo($feed);
         
-        //https://blog.ebot.biz/oauth1/authorize?oauth_token=BoE50zRj63ua&oauth_token_secret=oGa9LgmQHZg6xKftCXNFWDkJUWP1Jb38f5DDdAx5kyOAIkgI
+        
+        // RSS item
+        $news = News::find()->limit(50)->orderBy('id desc')->all();
+        foreach ($news as $row) {
+            $item = new Item();
+            $media = @json_decode(@$row->attachment);
+            
+            if (!empty($media)) {
+                if ($media->type === "video") {
+                    $media = $media->video->image;
+                } elseif ($media->type === "photo") {
+                    $media = @$row->media->thumb_src;
+                }
+            }
+            if (is_object($media)) {
+                $media = @$media->album->thumb->src_xxbig;
+            }
+            //print_r($media);
+            $item
+                ->title($this->text2title($row->text))
+                ->description($this->shortText($row->text))
+                ->content($row->text);
+            
+            if (!empty($media)) {
+                $item->enclosure($media, @get_headers($media, true)['Content-Length'], 'image/jpeg');
+            }
+            
+            $item->appendTo($channel);
+        }
+        header('Content-type: text/xml');
+        
+        return $feed;
+    }
+    
+    protected function text2title($text)
+    {
+        $max_lengh = 20;
+        
+        if (mb_strlen($text, "UTF-8") > $max_lengh) {
+            $text_cut = mb_substr($text, 0, $max_lengh, "UTF-8");
+            $text_explode = explode(" ", $text_cut);
+            
+            unset($text_explode[count($text_explode) - 1]);
+            
+            $text_implode = implode(" ", $text_explode);
+            
+            return $text_implode . "...";
+        } else {
+            return $text;
+        }
+    }
+    
+    protected function shortText($text)
+    {
+        $max_lengh = 1000;
+        
+        if (mb_strlen($text, "UTF-8") > $max_lengh) {
+            $text_cut = mb_substr($text, 0, $max_lengh, "UTF-8");
+            $text_explode = explode(" ", $text_cut);
+            
+            unset($text_explode[count($text_explode) - 1]);
+            
+            $text_implode = implode(" ", $text_explode);
+            
+            return $text_implode . "...";
+        } else {
+            return $text;
+        }
     }
 }

@@ -8,6 +8,9 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
+        'feed' => array(
+            'class' => 'yii\feed\FeedDriver',
+        ),
         'view' => [
             'class' => 'yii\web\View',
             'renderers' => [
