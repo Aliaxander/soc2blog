@@ -144,7 +144,7 @@ class CpController extends Controller
         }
         
         //header('Content-type: text/xml');
-        
+        $feed = str_replace("<head/>", "", $feed);
         echo $feed;
         die;
     }
