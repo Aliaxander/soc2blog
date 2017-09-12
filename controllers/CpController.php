@@ -21,11 +21,14 @@ use app\models\ContactForm;
 
 class CpController extends Controller
 {
+    
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
+        $this->layout = '';
+        
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -143,9 +146,9 @@ class CpController extends Controller
             $item->appendTo($channel);
         }
         
-        //header('Content-type: text/xml');
-        $feed = str_replace("<head/>", "", $feed);
-        echo $feed;
+        header('Content-type: text/xml');
+        
+        return $feed;
         die;
     }
     
