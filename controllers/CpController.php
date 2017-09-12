@@ -111,7 +111,6 @@ class CpController extends Controller
         $channel
             ->title("Programming")
             ->description("Programming with php")
-            ->url('http://bhaktaraz.com.np/?cat=2')
             ->appendTo($feed);
         
         
