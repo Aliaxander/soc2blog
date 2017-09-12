@@ -13,6 +13,8 @@ use Vnn\WpApiClient\Auth\WpBasicAuth;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\StringHelper;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -105,6 +107,50 @@ class CpController extends Controller
         //    return $this->render('index.twig', ['data' => json_encode($data)]);
     }
     
+    public function actionRss()
+    {
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => News::find()
+                ->orderBy(['id' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 10
+            ],
+        ]);
+    
+        $response = Yii::$app->getResponse();
+        $headers = $response->getHeaders();
+    
+        $headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
+    
+        $response->content = \Zelenin\yii\extensions\Rss\RssView::widget([
+            'dataProvider' => $dataProvider,
+            'channel' => [
+                'title' => 'Yiico – статьи по Yii2 и Yii',
+                'link' => Url::toRoute('/', true),
+                'description' => 'Статьи ',
+                'language' => Yii::$app->language
+            ],
+            'items' => [
+                'title' => function ($model, $widget) {
+                    return ($this->text2title($model->text));
+                },
+                'description' => function ($model, $widget) {
+                    return StringHelper::truncateWords($model->text, 50);
+                },
+                'link' => function ($model, $widget) {
+                    return Url::toRoute(['blog/view', 'id' => $model->id, 'slug' => $model->id], true);
+                },
+                'guid' => function ($model, $widget) {
+                    return Url::toRoute(['blog/view', 'id' => $model->id, 'slug' => $model->id], true);
+                },
+                'pubDate' => function ($model, $widget) {
+                    $date = \DateTime::createFromFormat('Y-m-d H:i:s', $model->create_time);
+                
+                    return $date->format(DATE_RSS);
+                },
+            ]
+        ]);
+    }
     
     public function actionBlog()
     {
