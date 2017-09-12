@@ -143,9 +143,10 @@ class CpController extends Controller
             
             $item->appendTo($channel);
         }
-        header('Content-type: text/xml');
         
-        return $feed;
+        //header('Content-type: text/xml');
+        
+        return $feed . "</xml>";
     }
     
     protected function text2title($text)
