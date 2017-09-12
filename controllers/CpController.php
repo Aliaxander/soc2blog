@@ -146,7 +146,8 @@ class CpController extends Controller
         
         //header('Content-type: text/xml');
         
-        return $feed . "</xml>";
+        echo $feed;
+        die;
     }
     
     protected function text2title($text)
