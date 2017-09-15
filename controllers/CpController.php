@@ -112,7 +112,8 @@ class CpController extends Controller
             $session = "<a href='/cp/vk'>Войти через VK</a>";
             $isPost = false;
         }
-        
+        print_r($session);
+        die;
         return $this->render('index.twig', ['data' => $data, 'session' => $session, 'isPost' => $isPost]);
         
         
