@@ -74,7 +74,7 @@ class CpController extends Controller
     {
         $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
         if (Yii::$app->request->get('code')) {
-            $accessToken = $vk->getAccessToken(Yii::$app->request->get('code'));
+            $accessToken = $vk->getAccessToken(Yii::$app->request->get('code'), 'https://soc2blog.ebot.biz/cp/vk');
             $cookies = Yii::$app->response->cookies;
             
             // add a new cookie to the response to be sent
