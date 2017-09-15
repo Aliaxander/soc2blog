@@ -82,8 +82,10 @@ class CpController extends Controller
                 'name' => 'session',
                 'value' => $accessToken,
             ]));
+            echo " - " . $accessToken;
+            die;
             
-            return $this->redirect('/vk');
+            return $this->redirect('/cp');
         }
         
         return $this->redirect($vk->getAuthorizeUrl('', 'https://soc2blog.ebot.biz/cp/vk'));
