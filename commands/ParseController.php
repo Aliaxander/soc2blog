@@ -43,11 +43,11 @@ class ParseController extends Controller
                     
                     $news = new News();
                     $news->text = $row->text;
-                    $news->token = $row->id;
+                    $news->token = $row->id . "_" . $project->vkId;
                     $news->media = @json_encode(@$row->media);
                     $news->attachment = @json_encode(@$row->attachment);
                     $news->project = $project->id;
-                    var_dump($news->save());
+                    var_dump($news->update());
                 }
             }
         }
