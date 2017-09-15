@@ -23,7 +23,7 @@ class WpClient
             'client_secret' => $client_secret // Only need if server is running CGI
         );
     
-        $curl = curl_init('https://blog.ebot.biz//oauth/token/');
+        $curl = curl_init('https://blog.ebot.biz/oauth/token/');
     
         // Uncomment if you want to use CLIENTID AND SECRET IN THE HEADER
         //curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

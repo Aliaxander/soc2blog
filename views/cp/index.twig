@@ -1,1 +1,34 @@
-{{ data }}
+Сессия: {{ session|raw }}
+<form method="post">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Источник</th>
+            <th>VK</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td>ID</td>
+                <td>Название</td>
+                <td>Источник</td>
+                <td>VK</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        {% if isPost %}
+            <tr>
+                <td></td>
+                <td><input type="text" name="name" placeholder="Название"></td>
+                <td><input type="text" name="vkId" placeholder="ID группы"></td>
+                <td><input type="text" name="vkProfile" value="{{ session }}"></td>
+                <td><input type="submit" value="Добавить" class="btn btn-success btn-xs"></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</form>

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\News;
+use app\models\Projects;
 use app\models\Vk;
 use app\models\WpClient;
 use Bhaktaraz\RSSGenerator\Channel;
@@ -16,6 +17,7 @@ use yii\filters\AccessControl;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\Cookie;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -29,7 +31,7 @@ class CpController extends Controller
      */
     public function behaviors()
     {
-        $this->layout = '';
+        //$this->layout = '';
         
         return [
             'access' => [
@@ -68,92 +70,79 @@ class CpController extends Controller
         ];
     }
     
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
+    public function actionVk()
+    {
+        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
+        if (Yii::$app->request->get('code')) {
+            $accessToken = $vk->getAccessToken(Yii::$app->request->get('code'));
+            $cookies = Yii::$app->response->cookies;
+            
+            // add a new cookie to the response to be sent
+            $cookies->add(new \yii\web\Cookie([
+                'name' => 'session',
+                'value' => $accessToken,
+            ]));
+            
+            return $this->redirect('/vk');
+        }
+        
+        return $this->redirect($vk->getAuthorizeUrl('', 'https://soc2blog.ebot.biz/cp/vk'));
+    }
+    
     public function actionIndex()
     {
+        $cookies = Yii::$app->response->cookies;
+        $session = $cookies->get('session');
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        WpClient::addPost();
-        die;
-        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
-        //        print_r($vk->getAuthorizeUrl());
-        //        die();
-        //        $result = $vk->getAccessToken('73e190efc179e4122c');
-        //        $data = $result;
-        //        var_dump($data);
-        //        //code = e600192589fc39db6d
-        //        7a8de399e5cf8f5c171d623f43ecf18bdd908935fee15a024c5eb8f0d26942675c53233c1fe687578d298
-        $vk->setAccessToken('7a8de399e5cf8f5c171d623f43ecf18bdd908935fee15a024c5eb8f0d26942675c53233c1fe687578d298');
-        $result = $vk->api('wall.get', ['owner_id' => '-18742951', 'count' => 100]);
-        
-        foreach ($result['response'] as $row) {
-            if (is_array($row)) {
-                $row = (object)$row;
-                print_r($row);
-                
-                $news = new News();
-                $news->text = $row->text;
-                $news->token = $row->id;
-                $news->media = @json_encode(@$row->media);
-                $news->attachment = @json_encode(@$row->attachment);
-                var_dump($news->save());
-            }
+        $data = Projects::find()->all();
+        if (Yii::$app->request->isPost) {
+            $model = new Projects();
+            
+            return $this->refresh();
         }
+        $isPost = 1;
+        if (empty($session)) {
+            $session = "<a href='/cp/vk'>Войти через VK</a>";
+            $isPost = false;
+        }
+        
+        return $this->render('index.twig', ['data' => $data, 'session' => $session, 'isPost' => $isPost]);
+        
+        
+        //        WpClient::addPost();
+        //        die;
+        //        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
+        //        //        print_r($vk->getAuthorizeUrl());
+        //        //        die();
+        //        //        $result = $vk->getAccessToken('73e190efc179e4122c');
+        //        //        $data = $result;
+        //        //        var_dump($data);
+        //        //        //code = e600192589fc39db6d
+        //        //        7a8de399e5cf8f5c171d623f43ecf18bdd908935fee15a024c5eb8f0d26942675c53233c1fe687578d298
+        //        $vk->setAccessToken('7a8de399e5cf8f5c171d623f43ecf18bdd908935fee15a024c5eb8f0d26942675c53233c1fe687578d298');
+        //        $result = $vk->api('wall.get', ['owner_id' => '-18742951', 'count' => 100]);
+        //
+        //        foreach ($result['response'] as $row) {
+        //            if (is_array($row)) {
+        //                $row = (object)$row;
+        //                print_r($row);
+        //
+        //                $news = new News();
+        //                $news->text = $row->text;
+        //                $news->token = $row->id;
+        //                $news->media = @json_encode(@$row->media);
+        //                $news->attachment = @json_encode(@$row->attachment);
+        //                var_dump($news->save());
+        //            }
+        //        }
         //    return $this->render('index.twig', ['data' => json_encode($data)]);
-    }
-    
-    public function actionRss()
-    {
-        $dataProvider = new \yii\data\ActiveDataProvider([
-            'query' => News::find()
-                ->orderBy(['id' => SORT_DESC]),
-            'pagination' => [
-                'pageSize' => 10
-            ],
-        ]);
-    
-        $response = Yii::$app->getResponse();
-        $headers = $response->getHeaders();
-    
-        $headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
-    
-        $response->content = \Zelenin\yii\extensions\Rss\RssView::widget([
-            'dataProvider' => $dataProvider,
-            'channel' => [
-                'title' => 'Yiico – статьи по Yii2 и Yii',
-                'link' => Url::toRoute('/', true),
-                'description' => 'Статьи ',
-                'language' => Yii::$app->language
-            ],
-            'items' => [
-                'title' => function ($model, $widget) {
-                    return ($this->text2title($model->text));
-                },
-                'description' => function ($model, $widget) {
-                    return StringHelper::truncateWords($model->text, 50);
-                },
-                'link' => function ($model, $widget) {
-                    return Url::toRoute(['blog/view', 'id' => $model->id, 'slug' => $model->id], true);
-                },
-                'guid' => function ($model, $widget) {
-                    return Url::toRoute(['blog/view', 'id' => $model->id, 'slug' => $model->id], true);
-                },
-                'pubDate' => function ($model, $widget) {
-                    $date = \DateTime::createFromFormat('Y-m-d H:i:s', $model->create_time);
-                
-                    return $date->format(DATE_RSS);
-                },
-            ]
-        ]);
     }
     
     public function actionBlog()
     {
+        $this->layout = '';
         $feed = new Feed();
         
         $channel = new Channel();
@@ -164,7 +153,7 @@ class CpController extends Controller
         
         
         // RSS item
-        $news = News::find()->limit(50)->orderBy('id desc')->all();
+        $news = News::find()->where(['project' => Yii::$app->request->get('id')])->limit(50)->orderBy('id desc')->all();
         foreach ($news as $row) {
             $item = new Item();
             $media = @json_decode(@$row->attachment);
@@ -182,7 +171,7 @@ class CpController extends Controller
             //print_r($media);
             $item
                 ->title($this->text2title($row->text))
-                ->description($this->shortText($row->text))
+                ->description($this->shortText($row->text) . " " . $media)
                 ->content($row->text);
             
             if (!empty($media)) {
