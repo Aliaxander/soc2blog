@@ -94,6 +94,9 @@ class CpController extends Controller
     {
         $cookies = Yii::$app->request->cookies;
         $session = $cookies->get('session');
+        if(is_object($session)){
+            $session= @$session->value['access_token'];
+        }
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -112,8 +115,8 @@ class CpController extends Controller
             $session = "<a href='/cp/vk'>Войти через VK</a>";
             $isPost = false;
         }
-        print_r($session);
-        die;
+//        print_r($session);
+//        die;
         return $this->render('index.twig', ['data' => $data, 'session' => $session, 'isPost' => $isPost]);
         
         
