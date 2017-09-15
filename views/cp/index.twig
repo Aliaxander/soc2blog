@@ -13,10 +13,10 @@
         <tbody>
         {% for row in data %}
             <tr>
-                <td>ID</td>
-                <td>Название</td>
-                <td>Источник</td>
-                <td>VK</td>
+                <td>{{ row.id }}</td>
+                <td><a href="/cp/blog?id={{ row.id }}" target="_blank">{{ row.name }}</a></td>
+                <td>{{ row.vkId }}</td>
+                <td>{{ row.vkProfile }}</td>
                 <td></td>
             </tr>
         {% endfor %}
@@ -25,7 +25,7 @@
                 <td></td>
                 <td><input type="text" name="name" placeholder="Название"></td>
                 <td><input type="text" name="vkId" placeholder="ID группы"></td>
-                <td><input type="text" name="vkProfile" value="{{ session }}"></td>
+                <td><input type="hidden" name="vkProfile" value="{{ session }}"></td>
                 <td><input type="submit" value="Добавить" class="btn btn-success btn-xs"></td>
             </tr>
         {% endif %}

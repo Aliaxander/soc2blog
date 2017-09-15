@@ -72,28 +72,27 @@ class CpController extends Controller
     
     public function actionVk()
     {
+        $collBackUrl = 'https://soc2blog.ebot.biz/cp/vk';
+       // $collBackUrl = 'http://localhost:8080/cp/vk';
         $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
         if (Yii::$app->request->get('code')) {
-            $accessToken = $vk->getAccessToken(Yii::$app->request->get('code'), 'https://soc2blog.ebot.biz/cp/vk');
-            $cookies = Yii::$app->response->cookies;
-            
-            // add a new cookie to the response to be sent
-            $cookies->add(new \yii\web\Cookie([
+            $accessToken = $vk->getAccessToken(Yii::$app->request->get('code'), $collBackUrl);
+            $cookie = new Cookie([
                 'name' => 'session',
-                'value' => $accessToken,
-            ]));
-            print_r($accessToken);
-            die;
+                'value' => $accessToken['access_token'],
+                'expire' => time() + 86400 * 365,
+            ]);
+            \Yii::$app->getResponse()->getCookies()->add($cookie);
             
             return $this->redirect('/cp');
         }
         
-        return $this->redirect($vk->getAuthorizeUrl('', 'https://soc2blog.ebot.biz/cp/vk'));
+        return $this->redirect($vk->getAuthorizeUrl('', $collBackUrl));
     }
     
     public function actionIndex()
     {
-        $cookies = Yii::$app->response->cookies;
+        $cookies = Yii::$app->request->cookies;
         $session = $cookies->get('session');
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -101,6 +100,10 @@ class CpController extends Controller
         $data = Projects::find()->all();
         if (Yii::$app->request->isPost) {
             $model = new Projects();
+            $model->name = Yii::$app->request->post('name');
+            $model->vkId = Yii::$app->request->post('vkId');
+            $model->vkProfile = Yii::$app->request->post('vkProfile');
+            $model->save();
             
             return $this->refresh();
         }
@@ -146,11 +149,13 @@ class CpController extends Controller
     {
         $this->layout = '';
         $feed = new Feed();
+        $data = Projects::findOne(['id' => Yii::$app->request->get('id')]);
+        
         
         $channel = new Channel();
         $channel
-            ->title("Programming")
-            ->description("Programming with php")
+            ->title($data->name)
+            ->description($data->name)
             ->appendTo($feed);
         
         
