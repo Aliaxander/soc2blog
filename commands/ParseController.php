@@ -34,7 +34,7 @@ class ParseController extends Controller
         foreach ($projects as $project) {
             $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
             $vk->setAccessToken($project->vkProfile);
-            $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 100]);
+            $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 1000]);
             
             foreach ($result['response'] as $row) {
                 if (is_array($row)) {

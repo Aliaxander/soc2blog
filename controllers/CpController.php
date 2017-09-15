@@ -73,7 +73,7 @@ class CpController extends Controller
     public function actionVk()
     {
         $collBackUrl = 'https://soc2blog.ebot.biz/cp/vk';
-       // $collBackUrl = 'http://localhost:8080/cp/vk';
+        // $collBackUrl = 'http://localhost:8080/cp/vk';
         $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
         if (Yii::$app->request->get('code')) {
             $accessToken = $vk->getAccessToken(Yii::$app->request->get('code'), $collBackUrl);
@@ -160,29 +160,33 @@ class CpController extends Controller
         
         
         // RSS item
-        $news = News::find()->where(['project' => Yii::$app->request->get('id')])->limit(50)->orderBy('id desc')->all();
+        $news = News::find()->where(['project' => Yii::$app->request->get('id')])->limit(200)->orderBy('id desc')->all();
         foreach ($news as $row) {
             $item = new Item();
-            $media = @json_decode(@$row->attachment);
-            
-            if (!empty($media)) {
-                if ($media->type === "video") {
-                    $media = $media->video->image;
-                } elseif ($media->type === "photo") {
-                    $media = @$row->media->thumb_src;
+            $attachment = @json_decode(@$row->attachment);
+            $media = @json_decode(@$row->media);
+            if (!empty($attachment)) {
+                if ($attachment->type == "video") {
+                    $attachment = $attachment->video->image;
+                } elseif ($attachment->type == "photo") {
+                    if (!empty(@$attachment->photo->src_big)) {
+                        $attachment = @$attachment->photo->src_big;
+                    } else {
+                        $attachment = @$media->thumb_src;
+                    }
                 }
             }
-            if (is_object($media)) {
-                $media = @$media->album->thumb->src_xxbig;
+            if (is_object($attachment)) {
+                $attachment = @$attachment->album->thumb->src_xxbig;
             }
             //print_r($media);
             $item
                 ->title($this->text2title($row->text))
-                ->description($this->shortText($row->text) . " " . $media)
+                ->description($this->shortText($row->text) . " " . $attachment)
                 ->content($row->text);
             
-            if (!empty($media)) {
-                $item->enclosure($media, @get_headers($media, true)['Content-Length'], 'image/jpeg');
+            if (!empty($attachment)) {
+                $item->enclosure($attachment, @get_headers($attachment, true)['Content-Length'], 'image/jpeg');
             }
             
             $item->appendTo($channel);
