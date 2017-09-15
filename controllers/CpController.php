@@ -82,7 +82,7 @@ class CpController extends Controller
                 'name' => 'session',
                 'value' => $accessToken,
             ]));
-            echo " - " . $accessToken;
+            print_r($accessToken);
             die;
             
             return $this->redirect('/cp');
