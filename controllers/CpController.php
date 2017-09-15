@@ -105,7 +105,7 @@ class CpController extends Controller
             $model = new Projects();
             $model->name = Yii::$app->request->post('name');
             $model->vkId = Yii::$app->request->post('vkId');
-            $model->vkProfile = Yii::$app->request->post('vkProfile');
+//            $model->vkProfile = Yii::$app->request->post('vkProfile');
             $model->save();
             
             return $this->refresh();

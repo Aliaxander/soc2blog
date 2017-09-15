@@ -33,7 +33,7 @@ class ParseController extends Controller
         $projects = Projects::find()->all();
         foreach ($projects as $project) {
             $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
-            $vk->setAccessToken($project->vkProfile);
+            $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
             $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 1000]);
             
             foreach ($result['response'] as $row) {
