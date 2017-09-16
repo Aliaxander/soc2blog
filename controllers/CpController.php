@@ -156,36 +156,55 @@ class CpController extends Controller
         
         
         // RSS item
-        $news = News::find()->where(['project' => Yii::$app->request->get('id')])->limit(20)->orderBy('id desc')->all();
+        $news = News::find()->where([
+            'project' => Yii::$app->request->get('id'),
+        ])->limit(20)->orderBy('id desc')->all();
+        $addText = '';
         foreach ($news as $row) {
             $item = new Item();
-            $attachment = @json_decode(@$row->attachment);
+            $attachments = @json_decode(@$row->attachment);
             $media = @json_decode(@$row->media);
-            if (!empty($attachment)) {
-                if ($attachment->type == "video") {
-                    $attachment = $attachment->video->image;
-                } elseif ($attachment->type == "photo") {
-                    if (!empty(@$attachment->photo->src_big)) {
-                        $attachment = @$attachment->photo->src_big;
+            //            print_r($attachments);
+            //            die;
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    if ($attachment->type == "video") {
+                        $attachment = $attachment->video->image;
+                    } elseif ($attachment->type == "photo") {
+                        if (!empty(@$attachment->photo->src_big)) {
+                            $attachment = @$attachment->photo->src_big;
+                        } else {
+                            $attachment = @$media->thumb_src;
+                        }
+                        if (is_object($attachment)) {
+                            $attachment = @$attachment->album->thumb->src_xxbig;
+                        }
                     } else {
-                        $attachment = @$media->thumb_src;
+                        $attachment = '';
+                    }
+            
+                    if (!empty($attachment)) {
+                        try {
+                            $addText .= "\n" . $attachment;
+                        } catch (\Exception $e) {
+//                            print_r($attachment);
+//                            die;
+                        }
+                        $item->enclosure($attachment, @get_headers($attachment, true)['Content-Length'],
+                            'image/jpeg');
                     }
                 }
             }
-            if (is_object($attachment)) {
-                $attachment = @$attachment->album->thumb->src_xxbig;
-            }
+//            print_r($addText);
+//            die;
             $row->text = $this->replaceText($row->text);
             //print_r($media);
             $item
                 ->title($this->text2title($row->text))
                 ->description($this->shortText($row->text) . " " . $attachment)
-                ->content($row->text);
-            
-            if (!empty($attachment)) {
-                $item->enclosure($attachment, @get_headers($attachment, true)['Content-Length'], 'image/jpeg');
-            }
-            
+                ->content($row->text . $addText);
+    
+    
             $item->appendTo($channel);
         }
         
