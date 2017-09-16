@@ -20,7 +20,6 @@
                 <td></td>
             </tr>
         {% endfor %}
-        {% if isPost %}
             <tr>
                 <td></td>
                 <td><input type="text" name="name" placeholder="Название"></td>
@@ -28,7 +27,6 @@
                 {#<td><input type="hidden" name="vkProfile" value="{{ session }}"></td>#}
                 <td><input type="submit" value="Добавить" class="btn btn-success btn-xs"></td>
             </tr>
-        {% endif %}
         </tbody>
     </table>
 </form>
