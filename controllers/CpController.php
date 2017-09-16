@@ -159,8 +159,9 @@ class CpController extends Controller
         $news = News::find()->where([
             'project' => Yii::$app->request->get('id'),
         ])->limit(20)->orderBy('id desc')->all();
-        $addText = '';
+        
         foreach ($news as $row) {
+            $addText = '';
             $item = new Item();
             $attachments = @json_decode(@$row->attachment);
             $media = @json_decode(@$row->media);
