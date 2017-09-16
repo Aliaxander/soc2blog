@@ -9,7 +9,6 @@ namespace app\commands;
 
 use app\models\News;
 use app\models\Projects;
-use VK\VK;
 use yii\console\Controller;
 
 /**

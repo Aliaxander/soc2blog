@@ -4,24 +4,16 @@ namespace app\controllers;
 
 use app\models\News;
 use app\models\Projects;
-use app\models\Vk;
-use app\models\WpClient;
 use Bhaktaraz\RSSGenerator\Channel;
 use Bhaktaraz\RSSGenerator\Feed;
 use Bhaktaraz\RSSGenerator\Item;
-use GuzzleHttp\Client;
 use Vnn\WpApiClient\Auth\WpBasicAuth;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
 use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\StringHelper;
-use yii\helpers\Url;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Cookie;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class CpController extends Controller
 {
@@ -183,6 +175,7 @@ class CpController extends Controller
             if (is_object($attachment)) {
                 $attachment = @$attachment->album->thumb->src_xxbig;
             }
+            $row->text = $this->replaceText($row->text);
             //print_r($media);
             $item
                 ->title($this->text2title($row->text))
@@ -200,6 +193,14 @@ class CpController extends Controller
         
         return $feed;
         die;
+    }
+    
+    protected function replaceText($text)
+    {
+        $text = preg_replace("/(#)+[\w\d.]*+(@)+[\w\d]*/iu", '', $text);
+        $text = preg_replace("/http(s)?:\/\/[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(\/.*)?/i", "---", $text);
+        
+        return $text;
     }
     
     protected function text2title($text)

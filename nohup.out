@@ -2,3 +2,18 @@ nohup: yii: No such file or directory
 Could not open input file: yii2
 Could not open input file: yii2
 Could not open input file: yii2
+Server started on http://localhost:8080/
+Document root is "/home/irina/web/ox/soc2blog/web"
+Quit the server with CTRL-C or COMMAND-C.
+Server started on http://localhost:8080/
+Document root is "/home/irina/web/ox/soc2blog/web"
+Quit the server with CTRL-C or COMMAND-C.
+[Mon Sep 11 18:20:43 2017] 127.0.0.1:49808 [200]: /
+[Mon Sep 11 18:20:43 2017] 127.0.0.1:49810 [200]: /assets/c3354042/css/bootstrap.css
+[Mon Sep 11 18:20:43 2017] 127.0.0.1:49812 [200]: /css/site.css
+[Mon Sep 11 18:20:43 2017] 127.0.0.1:49814 [200]: /assets/d508cd6f/jquery.js
+[Mon Sep 11 18:20:43 2017] 127.0.0.1:49816 [200]: /assets/c7a650ad/yii.js
+[Mon Sep 11 18:20:43 2017] 127.0.0.1:49818 [200]: /assets/c3354042/js/bootstrap.js
+[Mon Sep 11 18:20:44 2017] 127.0.0.1:49820 [200]: /favicon.ico
+[Mon Sep 11 18:20:44 2017] 127.0.0.1:49822 [200]: /debug/default/toolbar?tag=59b6a9cb35ba5
+[Mon Sep 11 18:20:44 2017] 127.0.0.1:49824 [200]: /favicon.ico
