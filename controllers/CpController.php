@@ -156,7 +156,7 @@ class CpController extends Controller
         
         
         // RSS item
-        $news = News::find()->where(['project' => Yii::$app->request->get('id')])->limit(200)->orderBy('id desc')->all();
+        $news = News::find()->where(['project' => Yii::$app->request->get('id')])->limit(20)->orderBy('id desc')->all();
         foreach ($news as $row) {
             $item = new Item();
             $attachment = @json_decode(@$row->attachment);
