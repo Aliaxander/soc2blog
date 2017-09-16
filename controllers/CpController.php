@@ -185,7 +185,7 @@ class CpController extends Controller
             
                     if (!empty($attachment)) {
                         try {
-                            $addText .= "\n" . $attachment;
+                            $addText .= "\n<img src='" . $attachment . "'>";
                         } catch (\Exception $e) {
 //                            print_r($attachment);
 //                            die;
