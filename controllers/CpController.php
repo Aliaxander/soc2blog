@@ -209,7 +209,9 @@ class CpController extends Controller
             if ($pos != false) {
                 $addText = substr($addText, 0, $pos);
             }
-           
+            if (!empty($attachment)) {
+                $addText = str_replace("<img src='" . $attachment . "'>", "", $addText);
+            }
             $item
                 ->title($this->text2title($row->text))
                 ->description($this->shortText($row->text))
