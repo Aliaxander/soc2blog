@@ -158,7 +158,7 @@ class CpController extends Controller
         // RSS item
         $news = News::find()->where([
             'project' => Yii::$app->request->get('id'),
-        ])->limit(20)->orderBy('id desc')->all();
+        ])->limit(2)->orderBy('id desc')->all();
         
         foreach ($news as $row) {
             $addText = '';
@@ -200,9 +200,14 @@ class CpController extends Controller
 //            die;
             $row->text = $this->replaceText($row->text);
             //print_r($media);
+            $pos = strrpos($addText, "\n");
+            if ($pos != false) {
+                $addText = substr($addText, 0, $pos);
+            }
+           
             $item
                 ->title($this->text2title($row->text))
-                ->description($this->shortText($row->text) . " " . $attachment)
+                ->description($this->shortText($row->text))
                 ->content($row->text . $addText);
     
     
