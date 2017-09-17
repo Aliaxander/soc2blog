@@ -158,7 +158,8 @@ class CpController extends Controller
         // RSS item
         $news = News::find()->where([
             'project' => Yii::$app->request->get('id'),
-        ])->limit(50)->orderBy('id desc')->all();
+            'isPost' => 0
+        ])->limit(20)->orderBy('id desc')->all();
         
         foreach ($news as $row) {
             $addText = '';
@@ -212,6 +213,8 @@ class CpController extends Controller
     
     
             $item->appendTo($channel);
+            $row->isPost = 1;
+            $row->update();
         }
         
         header('Content-type: text/xml');
