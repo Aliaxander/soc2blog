@@ -159,7 +159,7 @@ class CpController extends Controller
         $news = News::find()->where([
             'project' => Yii::$app->request->get('id'),
             'isPost' => 0
-        ])->limit(20)->orderBy('id desc')->all();
+        ])->limit(10)->orderBy('id desc')->all();
         
         foreach ($news as $row) {
             $addText = '';
