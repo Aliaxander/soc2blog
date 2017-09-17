@@ -158,7 +158,7 @@ class CpController extends Controller
         // RSS item
         $news = News::find()->where([
             'project' => Yii::$app->request->get('id'),
-        ])->limit(100)->orderBy('id desc')->all();
+        ])->limit(10)->orderBy('id desc')->all();
         
         foreach ($news as $row) {
             $addText = '';
@@ -223,7 +223,9 @@ class CpController extends Controller
     protected function replaceText($text)
     {
         $text = preg_replace("/(#)+[\w\d.]*+(@)+[\w\d]*/iu", '', $text);
-        $text = preg_replace("/http(s)?:\/\/[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(\/.*)?/i", "---", $text);
+        $text = preg_replace("/http(s)?:\/\/[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(\/.*)?/i", '', $text);
+        $text = preg_replace("/\bисточник:?\b/i", "", $text);
+        $text = preg_replace("/Читать полностью:?/i", "", $text);
         
         return $text;
     }
