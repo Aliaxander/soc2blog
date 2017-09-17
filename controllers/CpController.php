@@ -217,8 +217,8 @@ class CpController extends Controller
     
     
             $item->appendTo($channel);
-            $row->isPost = 1;
-            $row->update();
+//            $row->isPost = 1;
+//            $row->update();
         }
         
         header('Content-type: text/xml');
