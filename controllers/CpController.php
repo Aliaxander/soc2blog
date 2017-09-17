@@ -158,7 +158,7 @@ class CpController extends Controller
         // RSS item
         $news = News::find()->where([
             'project' => Yii::$app->request->get('id'),
-        ])->limit(2)->orderBy('id desc')->all();
+        ])->limit(20)->orderBy('id desc')->all();
         
         foreach ($news as $row) {
             $addText = '';
