@@ -7,8 +7,6 @@ use app\models\Projects;
 use Bhaktaraz\RSSGenerator\Channel;
 use Bhaktaraz\RSSGenerator\Feed;
 use Bhaktaraz\RSSGenerator\Item;
-use Vnn\WpApiClient\Auth\WpBasicAuth;
-use Vnn\WpApiClient\Http\GuzzleAdapter;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -86,8 +84,8 @@ class CpController extends Controller
     {
         $cookies = Yii::$app->request->cookies;
         $session = $cookies->get('session');
-        if(is_object($session)){
-            $session= @$session->value['access_token'];
+        if (is_object($session)) {
+            $session = @$session->value['access_token'];
         }
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -97,7 +95,7 @@ class CpController extends Controller
             $model = new Projects();
             $model->name = Yii::$app->request->post('name');
             $model->vkId = Yii::$app->request->post('vkId');
-//            $model->vkProfile = Yii::$app->request->post('vkProfile');
+            //            $model->vkProfile = Yii::$app->request->post('vkProfile');
             $model->save();
             
             return $this->refresh();
@@ -107,8 +105,8 @@ class CpController extends Controller
             $session = "<a href='/cp/vk'>Войти через VK</a>";
             $isPost = false;
         }
-//        print_r($session);
-//        die;
+        //        print_r($session);
+        //        die;
         return $this->render('index.twig', ['data' => $data, 'session' => $session, 'isPost' => $isPost]);
         
         
@@ -163,7 +161,7 @@ class CpController extends Controller
         
         foreach ($news as $row) {
             $addText = '';
-            $item = new Item();
+            $item = new \app\models\Helpers\Item();
             $attachments = @json_decode(@$row->attachment);
             $media = @json_decode(@$row->media);
             //            print_r($attachments);
@@ -174,8 +172,14 @@ class CpController extends Controller
                         if ($attachment->type == "video") {
                             $attachment = $attachment->video->image;
                         } elseif ($attachment->type == "photo") {
-                            if (!empty(@$attachment->photo->src_big)) {
-                                $attachment = @$attachment->photo->src_big;
+                            if (!empty(@$attachment->photo->photo_1280)) {
+                                $attachment = @$attachment->photo->photo_1280;
+                            } elseif (!empty(@$attachment->photo->photo_807)) {
+                                $attachment = @$attachment->photo->photo_807;
+                            } elseif (!empty(@$attachment->photo->photo_604)) {
+                                $attachment = @$attachment->photo->photo_604;
+                            } elseif (!empty(@$attachment->photo->photo_130)) {
+                                $attachment = @$attachment->photo->photo_130;
                             } else {
                                 $attachment = @$media->thumb_src;
                             }
@@ -185,7 +189,7 @@ class CpController extends Controller
                         } else {
                             $attachment = '';
                         }
-        
+                        
                         if (!empty($attachment)) {
                             try {
                                 $addText .= "\n<img src='" . $attachment . "'>\n";
@@ -201,8 +205,8 @@ class CpController extends Controller
                     }
                 }
             }
-//            print_r($addText);
-//            die;
+            //            print_r($addText);
+            //            die;
             $row->text = $this->replaceText($row->text);
             //print_r($media);
             $pos = strrpos($addText, "\n");
@@ -215,9 +219,9 @@ class CpController extends Controller
             $item
                 ->title($this->text2title($row->text))
                 ->description($this->shortText($row->text))
-                ->content($row->text . $addText);
-    
-    
+                ->content($row->text . $addText)->comments('https://soc2blog.ebot.biz/cp/comments?id=' . $row->id);
+            
+            
             $item->appendTo($channel);
             $row->isPost = 1;
             $row->update();
@@ -227,6 +231,17 @@ class CpController extends Controller
         
         return $feed;
         die;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function actionComments()
+    {
+        $news = News::find()->where(['id' => Yii::$app->request->get('id')])->one();
+        
+        
+        return $news->comments;
     }
     
     protected function replaceText($text)

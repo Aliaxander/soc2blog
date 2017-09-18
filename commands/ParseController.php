@@ -29,21 +29,23 @@ class ParseController extends Controller
     public function actionIndex($message = 'hello world')
     {
         echo $message . "\n";
-//        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
-//        $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
+        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
+        $vk->setApiVersion(5);
+        $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
 //        $result = $vk->api('wall.get', ['owner_id' => '-14897324', 'count' => 1]);
-//        print_r($result);
-//        die;
+        
         $projects = Projects::find()->all();
         foreach ($projects as $project) {
-            $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
-            $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
-            $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 100]);
+            $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 1]);
             //14897324
             foreach ($result['response'] as $row) {
                 if (is_array($row)) {
-                    $row = (object)$row;
+                    $row = (object)$row[0];
                     print_r($row);
+                    
+                    $comments = $vk->api('wall.getComments',
+                        ['owner_id' => $project->vkId, 'post_id' => $row->id, 'extended' => 1, 'count' => 100]);
+                    print_r($comments);
                     try {
                         $news = new News();
                         $news->text = $row->text;
@@ -51,6 +53,7 @@ class ParseController extends Controller
                         $news->media = @json_encode(@$row->media);
                         $news->attachment = @json_encode(@$row->attachments);
                         $news->project = $project->id;
+                        $news->comments = @json_encode($comments['response']);
                         var_dump($news->save());
                     } catch (\Exception $e) {
                     
