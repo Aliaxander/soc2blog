@@ -215,16 +215,16 @@ class CpController extends Controller
 //            print_r($attachment);
 //            die;
             if(is_object($attachment) && $attachment->type==='video'){
+                $row->text .= " " . @$attachment->video->description;
                 if (isset($attachment->video->photo_800)) {
                     $attachment = $attachment->video->photo_800;
-                } elseif ($attachment->video->photo_640) {
+                } elseif (isset($attachment->video->photo_640)) {
                     $attachment = $attachment->video->photo_640;
-                } elseif ($attachment->video->photo_320) {
+                } elseif (isset($attachment->video->photo_320) {
                     $attachment = $attachment->video->photo_320;
                 } else {
                     $attachment = "";
                 }
-                $row->text .= " " . @$attachment->video->description;
             }
             if (!empty($attachment)) {
                 $addText = str_replace("<img src='" . $attachment . "'>", "", $addText);
