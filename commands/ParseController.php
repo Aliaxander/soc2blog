@@ -68,6 +68,7 @@ class ParseController extends Controller
     
                 }
             }
+            sleep(random_int(1,2));
         }
         
         // print_r($vk->api('wall.get',['owner_id'=>'54476849','count'=>1]));
