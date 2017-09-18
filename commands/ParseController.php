@@ -57,7 +57,7 @@ class ParseController extends Controller
                         $news->comments = @json_encode($comments['response']);
                         var_dump($news->save());
                     } catch (\Exception $e) {
-                        print_r($e);
+                        print_r($e->getMessage());
                     }
                 }
             }
