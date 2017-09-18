@@ -261,7 +261,7 @@ class CpController extends Controller
     
     protected function text2title($text)
     {
-        $max_lengh = 20;
+        $max_lengh = 35;
         
         if (mb_strlen($text, "UTF-8") > $max_lengh) {
             $text_cut = mb_substr($text, 0, $max_lengh, "UTF-8");
