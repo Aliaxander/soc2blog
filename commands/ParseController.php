@@ -42,7 +42,6 @@ class ParseController extends Controller
                 if (is_array($row)) {
                     $row = (object)$row[0];
                     print_r($row);
-                    
                     $comments = $vk->api('wall.getComments',
                         ['owner_id' => $project->vkId, 'post_id' => $row->id, 'extended' => 1, 'count' => 100]);
                     echo "/n/n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COMMENTS:/n";
@@ -56,6 +55,9 @@ class ParseController extends Controller
                         $news->project = $project->id;
                         $news->comments = @json_encode($comments['response']);
                         var_dump($news->save());
+                        $news = News::findOne(['token' => $row->id . "_" . $project->vkId]);
+                        $news->comments = @json_encode($comments['response']);
+                        $news->update();
                     } catch (\Exception $e) {
                         print_r($e->getMessage());
                     }
