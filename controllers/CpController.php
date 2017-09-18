@@ -213,6 +213,11 @@ class CpController extends Controller
             if ($pos != false) {
                 $addText = substr($addText, 0, $pos);
             }
+//            print_r($attachment);
+//            die;
+            if(is_object($attachment) && $attachment->type==='video'){
+                $attachment= $attachment->video->photo_800;
+            }
             if (!empty($attachment)) {
                 $addText = str_replace("<img src='" . $attachment . "'>", "", $addText);
             }
