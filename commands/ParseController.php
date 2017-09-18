@@ -32,7 +32,7 @@ class ParseController extends Controller
         $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
         $vk->setApiVersion(5);
         $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
-//        $result = $vk->api('wall.get', ['owner_id' => '-14897324', 'count' => 1]);
+        //        $result = $vk->api('wall.get', ['owner_id' => '-14897324', 'count' => 1]);
         
         $projects = Projects::find()->all();
         foreach ($projects as $project) {
@@ -45,6 +45,7 @@ class ParseController extends Controller
                     
                     $comments = $vk->api('wall.getComments',
                         ['owner_id' => $project->vkId, 'post_id' => $row->id, 'extended' => 1, 'count' => 100]);
+                    echo "/n/n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COMMENTS:/n";
                     print_r($comments);
                     try {
                         $news = new News();
