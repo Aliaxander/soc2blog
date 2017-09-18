@@ -6,7 +6,6 @@ use app\models\News;
 use app\models\Projects;
 use Bhaktaraz\RSSGenerator\Channel;
 use Bhaktaraz\RSSGenerator\Feed;
-use Bhaktaraz\RSSGenerator\Item;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -216,7 +215,16 @@ class CpController extends Controller
 //            print_r($attachment);
 //            die;
             if(is_object($attachment) && $attachment->type==='video'){
-                $attachment= $attachment->video->photo_800;
+                if (isset($attachment->video->photo_800)) {
+                    $attachment = $attachment->video->photo_800;
+                } elseif ($attachment->video->photo_640) {
+                    $attachment = $attachment->video->photo_640;
+                } elseif ($attachment->video->photo_320) {
+                    $attachment = $attachment->video->photo_320;
+                } else {
+                    $attachment = "";
+                }
+                $row->text .= " " . @$attachment->video->description;
             }
             if (!empty($attachment)) {
                 $addText = str_replace("<img src='" . $attachment . "'>", "", $addText);
