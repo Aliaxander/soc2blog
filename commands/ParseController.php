@@ -55,12 +55,17 @@ class ParseController extends Controller
                         $news->project = $project->id;
                         $news->comments = @json_encode($comments['response']);
                         var_dump($news->save());
+                    } catch (\Exception $e) {
+                        print_r($e->getMessage());
+                    }
+                    try {
                         $news = News::findOne(['token' => $row->id . "_" . $project->vkId]);
                         $news->comments = @json_encode($comments['response']);
                         $news->update();
                     } catch (\Exception $e) {
                         print_r($e->getMessage());
                     }
+    
                 }
             }
         }
