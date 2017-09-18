@@ -36,7 +36,7 @@ class ParseController extends Controller
         
         $projects = Projects::find()->all();
         foreach ($projects as $project) {
-            $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 1]);
+            $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 100]);
             //14897324
             foreach ($result['response'] as $row) {
                 if (is_array($row)) {
