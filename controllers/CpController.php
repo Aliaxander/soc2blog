@@ -226,6 +226,8 @@ class CpController extends Controller
                     $attachment = "";
                 }
             }
+            print_r($attachment);
+            die;
             if (!empty($attachment)) {
                 $addText = str_replace("<img src='" . $attachment . "'>", "", $addText);
             }
