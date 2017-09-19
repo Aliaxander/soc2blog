@@ -214,7 +214,7 @@ class CpController extends Controller
             }
 //            print_r($attachment);
 //            die;
-            if(is_object($attachment) && $attachment->type==='video'){
+            if(is_object($attachment) && @$attachment->type==='video'){
                 $row->text .= " " . @$attachment->video->description;
                 if (isset($attachment->video->photo_800)) {
                     $attachment = $attachment->video->photo_800;
