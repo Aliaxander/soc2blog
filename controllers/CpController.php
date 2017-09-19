@@ -220,7 +220,7 @@ class CpController extends Controller
                     $attachment = $attachment->video->photo_800;
                 } elseif (isset($attachment->video->photo_640)) {
                     $attachment = $attachment->video->photo_640;
-                } elseif (isset($attachment->video->photo_320) {
+                } elseif (isset($attachment->video->photo_320)) {
                     $attachment = $attachment->video->photo_320;
                 } else {
                     $attachment = "";
