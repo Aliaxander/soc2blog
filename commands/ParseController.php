@@ -29,11 +29,19 @@ class ParseController extends Controller
     public function actionIndex($message = 'hello world')
     {
         echo $message . "\n";
-        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
-        $vk->setApiVersion(5);
-        $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
-        //        $result = $vk->api('wall.get', ['owner_id' => '-14897324', 'count' => 1]);
         
+        $vk = new \VK\VK('6180749 ', 'QrNebYK25HTxXwrvWW5g');
+       $accessKey=json_decode(file_get_contents('https://oauth.vk.com/access_token?client_id=6180749&client_secret=QrNebYK25HTxXwrvWW5g&v=5.68&grant_type=client_credentials&scope=256'));
+//
+        $vk->setApiVersion(5.68);
+       // $vk->setAccessToken('512ac84d512ac84d512ac84d26517487c05512a512ac84d089c90d1471a0245796ec90e');
+        $vk->setAccessToken($accessKey->access_token);
+    
+        //        $result = $vk->api('wall.get', ['owner_id' => '-14897324', 'count' => 1]);
+       // $result = $vk->api('wall.get', ['owner_id' => '-78614185', 'count' => 10]);
+        $result = $vk->api('pages.get', ['owner_id' => '78614185', 'page_id' => 54851318]);
+        print_r($result);
+        die;
         $projects = Projects::find()->all();
         foreach ($projects as $project) {
             $result = $vk->api('wall.get', ['owner_id' => $project->vkId, 'count' => 100]);
